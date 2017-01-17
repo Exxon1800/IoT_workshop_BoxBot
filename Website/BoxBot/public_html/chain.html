@@ -45,16 +45,16 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a class="navbar-brand" href="#">BoxBot</a>
+                    <a class="navbar-brand" href="boxBot.html">BoxBot</a>
                 </div>
                 <!-- Collect the nav links, forms, and other content for toggling -->
                 <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                     <ul class="nav navbar-nav">
                         <li>
-                            <a href="#">Chain-Modus</a>
+                            <a href="chain.html">Chain-Modus</a>
                         </li>
                         <li>
-                            <a href="#">Code-Modus</a>
+                            <a href="code.html">Code-Modus</a>
                         </li>
                     </ul>
                 </div>
@@ -127,16 +127,11 @@
                     </div> <!-- left action-->
                     <div class="col-lg-1 col-xs-1 controllerButton"></div>
                     <div class="col-lg-1 col-xs-1 controllerButton"><!-- centre action-->                            
-                        <button class="btn btn-success controllerButton" onclick="go();">
-                            <span class="glyphicon glyphicon-play-circle"></span>
+                        <button id="goButton" class="btn btn-success controllerButton" onclick="go();">
+                            <span id="goButtonGlyphicon" class="glyphicon glyphicon-play-circle"></span>
                         </button>                  
                     </div>
-                    <div class="col-lg-1 col-xs-1 controllerButton"><!-- rights action-->
-                        <button class="btn btn-danger controllerButton" onclick="stop();">
-                            <span class="glyphicon glyphicon-stop"></span>
-                        </button>
-                    </div>
-                    <div class="col-lg-4 col-xs-4 controllerButton"></div>
+                    <div class="col-lg-5 col-xs-5 controllerButton"></div><!-- rights action-->
                 </div>
 
             </div>   
