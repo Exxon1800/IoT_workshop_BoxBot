@@ -57,7 +57,7 @@ function erase() {
     }
 }
 
-function go() {
+function go() {//gives directons to the bot
     var recordedDirections = "";
     for (var i = 0; i <= num; i++) {//add all the array entries together into one string to be sent
         if (directionArray[i] != null) {//prevents adding empty array entries
@@ -67,14 +67,16 @@ function go() {
     console.log(recordedDirections);
 
     if (directionArray[0] != null) {//if the first enry is not empty
-        //post recordedDirections to wilco's api and then to the nodeMCU
-        url = "http://thingscon16.futuretechnologies.nl/api.php?t=sdc&d=FF6E&td=FF6E&c=&m=" + recordedDirections;
-        $.ajax({
-            type: "POST",
-            url: url,
-            data: recordedDirections,
-            success: console.log("go post success")
-        });
+
+        //post recordedDirections to wilco's api and then to the nodeMCU, FIRST! Set device configuration (api url with t=sdc)
+        urlSDC = "http://thingscon16.futuretechnologies.nl/api.php?t=sdc&d=FF6E&td=FF6E&c=&m=" + recordedDirections;
+        successSDC = console.log("go SDC post success");
+        ajaxPost(urlSDC, successSDC);//ajaxPost, see ajaxPost function 
+
+        //SECONDLY the Set query item (api url with t=sqi)
+        urlSQI = "http://thingscon16.futuretechnologies.nl/api.php?t=sqi&d=FF6E";
+        successSQI = console.log("go SQI post success");
+        ajaxPost(urlSQI, successSQI);//ajaxPost, see ajaxPost function 
 
         //change button to stop button
         document.getElementById("goButton").className = 'btn btn-danger controllerButton'; //change class to change color
@@ -84,19 +86,29 @@ function go() {
     }
 }
 
-function stop() {
-    //to stop the bot
-    $.ajax({
-        type: "POST",
-        url: "http://thingscon16.futuretechnologies.nl/api.php?t=sdc&d=FF6E&td=FF6E&c=&m=stop",
-        data: stop,
-        success: console.log("stop post success")
-    });
+function stop() {//to stop the bot
     
+    //post stop to wilco's api and then to the nodeMCU, FIRST! Set device configuration (api url with t=sdc)
+    urlSDC = "http://thingscon16.futuretechnologies.nl/api.php?t=sdc&d=FF6E&td=FF6E&c=&m=stop";
+    successSDC = console.log("SDC stop post success");
+    ajaxPost(urlSDC, successSDC);//ajaxPost, see ajaxPost function 
+
+    //SECONDLY the Set query item (api url with t=sqi)
+    urlSQI = "http://thingscon16.futuretechnologies.nl/api.php?t=sqi&d=FF6E";
+    successSQI = console.log("stop post success");
+    ajaxPost(urlSQI, successSQI);//ajaxPost, see ajaxPost function 
+
     //change button to goButton
     document.getElementById("stopButton").className = 'btn btn-success controllerButton'; //change class to change color
     document.getElementById("stopButton").setAttribute("onClick", "go();"); //change onclick event to go to run go at the next click
     document.getElementById("stopButton").id = 'goButton'; //change id to use js on the go button instead of the stop button
     document.getElementById("goButtonGlyphicon").className = 'glyphicon glyphicon-play-circle'; //change glypicon to go
+}
 
+function ajaxPost(url, success) {
+    $.ajax({
+        type: "POST",
+        url: url,
+        success: success
+    });
 }
