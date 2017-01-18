@@ -3,8 +3,7 @@
 var recordedDirections = "";
 var speed = 25; //25 out of 100
 var time = 500; //in ms
-var internalDevider = '_';  // looks like "forward+25+500;left+25+500;"
-var devider = ';';  //ends a single direction command
+var devider = ';';  //looks like "forward;25;500;left;25;500;"
 var formattedDirection = "";    //direction after formatting
 var num = 0; //is used for the commands array, gives the images a unique id for removal
 var recordedDirections = "";
@@ -13,7 +12,7 @@ var directionArray = new Array();
 
 function addDirection(direction) {
     console.log(direction);
-    formattedDirection = direction + internalDevider + speed + internalDevider + time + devider; // so it will look like "forward+25+500;left+25+500;" or "direction+speed+time;"
+    formattedDirection = direction + devider + speed + devider + time + devider; // so it will look like "forward+25+500;left+25+500;" or "direction+speed+time;"
     directionArray[num] = formattedDirection;
     console.log(directionArray);
 
@@ -24,7 +23,7 @@ function addDirection(direction) {
     var img = document.createElement("img");
 
     switch (direction) {
-        case 'up':
+        case 'forward':
             img.src = "resources/directions/up.png";
             break;
         case 'left':
@@ -33,7 +32,7 @@ function addDirection(direction) {
         case 'right':
             img.src = "resources/directions/right.png";
             break;
-        case 'down':
+        case 'backward':
             img.src = "resources/directions/down.png";
             break;
     }
@@ -90,12 +89,12 @@ function stop() {//to stop the bot
     
     //post stop to wilco's api and then to the nodeMCU, FIRST! Set device configuration (api url with t=sdc)
     urlSDC = "http://thingscon16.futuretechnologies.nl/api.php?t=sdc&d=FF6E&td=FF6E&c=&m=stop";
-    successSDC = console.log("SDC stop post success");
+    successSDC = console.log("stop SDC post success");
     ajaxPost(urlSDC, successSDC);//ajaxPost, see ajaxPost function 
 
     //SECONDLY the Set query item (api url with t=sqi)
     urlSQI = "http://thingscon16.futuretechnologies.nl/api.php?t=sqi&d=FF6E";
-    successSQI = console.log("stop post success");
+    successSQI = console.log("stop SQI post success");
     ajaxPost(urlSQI, successSQI);//ajaxPost, see ajaxPost function 
 
     //change button to goButton
