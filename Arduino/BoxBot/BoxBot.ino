@@ -139,29 +139,31 @@ void fadeBrightness(uint8_t r, uint8_t g, uint8_t b, float currentBrightness) {
 }
 
 
-void boxBotStrtok(String message) {
-  //variables for the first strtok()
-  const char s[2] = ";"; //delimiter
-  char* token;
-  char* commandsStrings[1000];
-
+void boxBotSplitMessage(String message) {
   if (message == "stop") {
     stopBoxBot();
   } else {
-    char str[message.length()]; //create a cstring array with the length of the message
-    message.toCharArray(str, message.length()); //convert string to cstring with the length of the message and put it into the string we declared in the row above
+    //variables for the first strtok()
+    int i = 0;
+    int startOfCommand = 0;
+    int command = 0;
+    String delimiter = ";";
+    String c = "";
+    String commandsStrings[100];
 
-    //break the string into commands and parameters
-    token = strtok(str, s); //get the first token
-    //walk through other tokens
-    for (int i = 0; token != NULL; i++) {
-      Serial.println(token);
-      commandsStrings[i] = token;
-      token = strtok(NULL, s);
+    while (i < message.length()) {
+      String c = message.substring(i, (i + 1));
+      if (c == delimiter) { //Process char, new command found
+        commandsStrings[command] =  message.substring(startOfCommand, (i));
+        Serial.println(commandsStrings[command]);
+        startOfCommand = i + 1;
+        command++;
+      }
+      i++;
     }
-    boxbotControll(commandsStrings);
   }
 }
+
 
 void boxbotControll(char* commandsStrings[]) {
   int i = 0;
@@ -172,8 +174,6 @@ void boxbotControll(char* commandsStrings[]) {
       leftBoxbot(atoi(commandsStrings[i + 1]), atoi(commandsStrings[i + 2]));
     } else if (commandsStrings[i] ==  "right") {
       rightBoxbot(atoi(commandsStrings[i + 1]), atoi(commandsStrings[i + 2]));
-    } else if (commandsStrings[i] ==  "backward") {
-      backwardBoxbot(atoi(commandsStrings[i + 1]), atoi(commandsStrings[i + 2]));
     }
   }
 }
@@ -205,6 +205,9 @@ void backwardBoxbot(int boxBotSpeed, int boxBotDuration) {
 
 
 void loop() {
+  //remove the stop command
+  stopBoxBotBool = false;
+
   //Check for button press
   if (digitalRead(BUTTON_PIN) == LOW) {
     sendButtonPress();
@@ -264,7 +267,7 @@ void requestMessage() {
 
       //possibly drive the box
       if (message != NULL) {
-        boxBotStrtok(message);
+        boxBotSplitMessage(message);
       }
       //Extract the hex color and fade the led strip
       int number = (int) strtol( &response[1], NULL, 16);

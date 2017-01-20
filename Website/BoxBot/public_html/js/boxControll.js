@@ -32,9 +32,10 @@ function addDirection(direction) {
         case 'right':
             img.src = "resources/directions/right.png";
             break;
-        case 'backward':
-            img.src = "resources/directions/down.png";
-            break;
+            //bot can't go backwards at the moment
+//        case 'backward':
+//            img.src = "resources/directions/down.png";
+//            break;
     }
     img.id = "directionImage" + num; //give the image an unique id for removal
     img.height = 50;
@@ -86,7 +87,7 @@ function go() {//gives directons to the bot
 }
 
 function stop() {//to stop the bot
-    
+
     //post stop to wilco's api and then to the nodeMCU, FIRST! Set device configuration (api url with t=sdc)
     urlSDC = "http://thingscon16.futuretechnologies.nl/api.php?t=sdc&d=FF6E&td=FF6E&c=&m=stop";
     successSDC = console.log("stop SDC post success");
