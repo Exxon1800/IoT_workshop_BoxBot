@@ -145,35 +145,36 @@ void boxBotSplitMessage(String message) {
   } else {
     //variables for the first strtok()
     int i = 0;
-    int startOfCommand = 0;
-    int command = 0;
+    int startOfCommand = 0; // is used to indicate the start of a new command
+    int command = 0;  //command itterator for the command array
     String delimiter = ";";
-    String c = "";
-    String commandsStrings[100];
+    String c = ""; //stores the current character in a string
+    String commandsStrings[1000];
 
-    while (i < message.length()) {
-      String c = message.substring(i, (i + 1));
+    while (i < message.length()) { //loops through the whole length of the message
+      String c = message.substring(i, (i + 1)); //gets the char at i
       if (c == delimiter) { //Process char, new command found
-        commandsStrings[command] =  message.substring(startOfCommand, (i));
+        commandsStrings[command] =  message.substring(startOfCommand, (i)); // gets all the letters since startOfCommand to the current letter at i
         Serial.println(commandsStrings[command]);
-        startOfCommand = i + 1;
-        command++;
+        startOfCommand = i + 1; //is set to the last end of a command + 1(so i does not include the delimiter)
+        command++; //next command in array
       }
-      i++;
+      i++; //go to the next letter if it is not a delimiter
     }
+    boxbotControll(commandsStrings);
   }
 }
 
 
-void boxbotControll(char* commandsStrings[]) {
+void boxbotControll(String commandsStrings[]) {
   int i = 0;
   for (i; i <= sizeof(commandsStrings); i++) {
     if (commandsStrings[i] == "forward") {
-      //forwardBoxbot(atoi(commandsStrings[i + 1]), atoi(commandsStrings[i + 2])); //include the speed and the duration, atoi is for converting char* to int
+      forwardBoxbot(commandsStrings[i + 1].toInt(), commandsStrings[i + 2].toInt()); //include the speed and the duration, toIntis for converting char* to int
     } else if (commandsStrings[i] == "left") {
-      leftBoxbot(atoi(commandsStrings[i + 1]), atoi(commandsStrings[i + 2]));
+      leftBoxbot(commandsStrings[i + 1].toInt(), commandsStrings[i + 2].toInt());
     } else if (commandsStrings[i] ==  "right") {
-      rightBoxbot(atoi(commandsStrings[i + 1]), atoi(commandsStrings[i + 2]));
+      rightBoxbot(commandsStrings[i + 1].toInt(), commandsStrings[i + 2].toInt());
     }
   }
 }
@@ -190,17 +191,12 @@ void leftBoxbot(int boxBotSpeed, int boxBotDuration) {
 
 void rightBoxbot(int boxBotSpeed, int boxBotDuration) {
   if (stopBoxBotBool == true) return;
-  Serial.printf("driving left with a speed of %d  for %d miliseconds \n", boxBotSpeed, boxBotDuration);
+  Serial.printf("driving right with a speed of %d  for %d miliseconds \n", boxBotSpeed, boxBotDuration);
 }
 
 void forwardBoxbot(int boxBotSpeed, int boxBotDuration) {
   if (stopBoxBotBool == true) return;
-  Serial.printf("driving left with a speed of %d  for %d miliseconds \n", boxBotSpeed, boxBotDuration);
-}
-
-void backwardBoxbot(int boxBotSpeed, int boxBotDuration) {
-  if (stopBoxBotBool == true) return;
-  Serial.printf("driving left with a speed of %d  for %d miliseconds \n", boxBotSpeed, boxBotDuration);
+  Serial.printf("driving forward with a speed of %d  for %d miliseconds \n", boxBotSpeed, boxBotDuration);
 }
 
 
