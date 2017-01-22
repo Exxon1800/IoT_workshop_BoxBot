@@ -1,7 +1,7 @@
 //http://stackoverflow.com/questions/8886248/add-image-to-page-onclick
 
 var recordedDirections = "";
-var speed = 25; //25 out of 100
+var speed = 25; //25 out of 255
 var time = 500; //in ms
 var devider = ';';  //looks like "forward;25;500;left;25;500;"
 var formattedDirection = "";    //direction after formatting
