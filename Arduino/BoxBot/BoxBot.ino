@@ -28,12 +28,15 @@ class SpringyValue {
 };
 
 
-#define BUTTON_PIN  D1
-#define PIN         D2
+#define BUTTON_PIN  D3
+#define PIN         D6
 #define LED_COUNT    6
 
 #define fadeInDelay  5
 #define fadeOutDelay 8
+
+#define motorPin0 D0
+#define motorPin1 D1
 
 #define requestDelay 2000
 
@@ -46,7 +49,8 @@ String chipID;
 char chipIdArray[5] = {};
 String webURL = "http://thingscon16.futuretechnologies.nl";
 volatile bool stopBoxBotBool = false;
-
+unsigned long stopTimer;
+unsigned long startTimer;
 void setAllPixels(uint8_t r, uint8_t g, uint8_t b, float multiplier);
 
 
@@ -85,6 +89,8 @@ void setup() {
   wifiManager.autoConnect(wifiName);
   fadeBrightness(0, 255, 255, 1.0);
   myServo.attach(D7);
+  pinMode(motorPin0, OUTPUT);
+  pinMode(motorPin1, OUTPUT);
 }
 
 
@@ -149,7 +155,7 @@ void boxBotSplitMessage(String message) {
     int command = 0;  //command itterator for the command array
     String delimiter = ";";
     String c = ""; //stores the current character in a string
-    String commandsStrings[message.length()+1];
+    String commandsStrings[message.length() + 1];
 
     while (i < message.length()) {    //loops through the whole length of the message
       String c = message.substring(i, (i + 1));   //gets the char at i
@@ -185,20 +191,45 @@ void stopBoxBot() {
 }
 
 void leftBoxbot(int boxBotSpeed, int boxBotDuration) {
-  if (stopBoxBotBool == true) return;
   Serial.printf("driving left with a speed of %d  for %d miliseconds \n", boxBotSpeed, boxBotDuration);
+  startTimer = millis(); //time the box started driving
+  while (stopTimer <= boxBotDuration) { // if stoptimer >= box duration stop stop driving
+    stopTimer = millis() - startTimer; //time - starting time = stopping time(time it has run)
+    //PWM
+    analogWrite(motorPin0, boxBotSpeed);//left motor
+  }
+  //turn the motor(s) off
+  analogWrite(motorPin0, 0);//left motor
+  Serial.println("stoped driving right, next direction");
 }
 
 void rightBoxbot(int boxBotSpeed, int boxBotDuration) {
-  if (stopBoxBotBool == true) return;
   Serial.printf("driving right with a speed of %d  for %d miliseconds \n", boxBotSpeed, boxBotDuration);
+  startTimer = millis(); //time the box started driving
+  while (stopTimer <= boxBotDuration) { // if stoptimer >= box duration stop stop driving
+    stopTimer = millis() - startTimer; //time - starting time = stopping time(time it has run)
+    //PWM
+    analogWrite(motorPin1, boxBotSpeed);//right motor
+  }
+  //turn the motor(s) off
+  analogWrite(motorPin1, 0);//right motor
+  Serial.println("stoped driving left, next direction");
 }
 
 void forwardBoxbot(int boxBotSpeed, int boxBotDuration) {
-  if (stopBoxBotBool == true) return;
   Serial.printf("driving forward with a speed of %d  for %d miliseconds \n", boxBotSpeed, boxBotDuration);
+  startTimer = millis(); //time the box started driving
+  while (stopTimer <= boxBotDuration) { // if stoptimer >= box duration stop stop driving
+    stopTimer = millis() - startTimer; //time - starting time = stopping time(time it has run)
+    //PWM
+    analogWrite(motorPin0, boxBotSpeed);//left motor
+    analogWrite(motorPin1, boxBotSpeed);//right motor
+  }
+  //turn the motor(s) off
+  analogWrite(motorPin0, 0);//left motor
+  analogWrite(motorPin1, 0);//right motor
+  Serial.println("stoped driving forward, next direction");
 }
-
 
 void loop() {
   //remove the stop command
