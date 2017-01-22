@@ -149,17 +149,17 @@ void boxBotSplitMessage(String message) {
     int command = 0;  //command itterator for the command array
     String delimiter = ";";
     String c = ""; //stores the current character in a string
-    String commandsStrings[1000];
+    String commandsStrings[message.length()+1];
 
-    while (i < message.length()) { //loops through the whole length of the message
-      String c = message.substring(i, (i + 1)); //gets the char at i
+    while (i < message.length()) {    //loops through the whole length of the message
+      String c = message.substring(i, (i + 1));   //gets the char at i
       if (c == delimiter) { //Process char, new command found
-        commandsStrings[command] =  message.substring(startOfCommand, (i)); // gets all the letters since startOfCommand to the current letter at i
+        commandsStrings[command] =  message.substring(startOfCommand, (i));   // gets all the letters since startOfCommand to the current letter at i
         Serial.println(commandsStrings[command]);
-        startOfCommand = i + 1; //is set to the last end of a command + 1(so i does not include the delimiter)
-        command++; //next command in array
+        startOfCommand = i + 1;   //is set to the last end of a command + 1(so i does not include the delimiter)
+        command++;    //next command in array
       }
-      i++; //go to the next letter if it is not a delimiter
+      i++;  //go to the next letter if it is not a delimiter
     }
     boxbotControll(commandsStrings);
   }
